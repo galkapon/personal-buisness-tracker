@@ -41,9 +41,9 @@ export function useTimer(userId: string | undefined) {
           table: 'time_entries',
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
-          if (payload.new.ended_at === null) {
-            setRunningEntry(payload.new)
+        (payload: any) => {
+          if (payload.new?.ended_at === null) {
+            setRunningEntry(payload.new as TimeEntry)
           } else {
             setRunningEntry(null)
           }
