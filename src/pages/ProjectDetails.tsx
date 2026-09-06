@@ -76,7 +76,7 @@ export function ProjectDetails({ project, userId, onBack }: ProjectDetailsProps)
 
         return { month, hours, minutes, entries }
       })
-      .sort((a, b) => new Date(b.month) - new Date(a.month))
+      .sort((a, b) => new Date(b.month).getTime() - new Date(a.month).getTime())
   }
 
   const formatDuration = (entry: TimeEntry) => {
