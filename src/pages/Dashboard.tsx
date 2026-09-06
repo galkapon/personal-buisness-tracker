@@ -4,6 +4,7 @@ import { ProjectQuickStart } from '@/components/ProjectQuickStart'
 import { FloatingTimer } from '@/components/FloatingTimer'
 import { useAuth } from '@/hooks/useAuth'
 import { useTimer } from '@/hooks/useTimer'
+import { Link } from 'react-router-dom'
 
 export interface Project {
   id: string
@@ -25,7 +26,7 @@ export interface TimeEntry {
 
 export function Dashboard() {
   const { user, signOut } = useAuth()
-  const { runningEntry, startTimer, stopTimer, updateNotes } = useTimer(user?.id)
+  const { runningEntry, startTimer, stopTimer } = useTimer(user?.id)
 
   const [projects, setProjects] = useState<Project[]>([])
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([])
@@ -179,7 +180,20 @@ export function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">Time Tracker</h1>
+          <div className="flex items-center gap-8">
+            <h1 className="text-2xl font-bold text-gray-900">Time Tracker</h1>
+            <nav className="flex gap-6">
+              <Link to="/" className="text-gray-700 hover:text-gray-900 font-medium">
+                Home
+              </Link>
+              <Link to="/tracking" className="text-gray-700 hover:text-gray-900 font-medium text-blue-600">
+                Tracking
+              </Link>
+              <Link to="/research" className="text-gray-700 hover:text-gray-900 font-medium">
+                Research
+              </Link>
+            </nav>
+          </div>
           <button
             onClick={() => signOut()}
             className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
