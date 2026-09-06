@@ -53,7 +53,10 @@ export default defineConfig({
       },
     }),
   ],
-  base: '/',
+  base: '/personal-buisness-tracker/',
+  build: {
+    outDir: 'docs',
+  },
   server: {
     port: 5173,
     open: true,
