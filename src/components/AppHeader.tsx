@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
+import { ChangePasswordModal } from '@/components/ChangePasswordModal'
 
 const TABS = [
   { to: '/', label: 'Tracking' },
@@ -9,6 +11,7 @@ const TABS = [
 
 export function AppHeader() {
   const { signOut } = useAuth()
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -32,10 +35,16 @@ export function AppHeader() {
               </NavLink>
             ))}
         </nav>
-        <button onClick={() => signOut()} className="btn-ghost py-1.5 ml-auto">
-          Sign out
-        </button>
+        <div className="ml-auto flex gap-1">
+          <button onClick={() => setShowPasswordModal(true)} className="btn-ghost py-1.5">
+            Change password
+          </button>
+          <button onClick={() => signOut()} className="btn-ghost py-1.5">
+            Sign out
+          </button>
+        </div>
       </div>
+      {showPasswordModal && <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />}
     </header>
   )
 }

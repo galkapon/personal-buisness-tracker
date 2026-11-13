@@ -26,5 +26,7 @@ export function useAuth() {
 
   const signOut = () => supabase.auth.signOut()
 
-  return { user, loading, signIn, signOut }
+  const changePassword = (password: string) => supabase.auth.updateUser({ password })
+
+  return { user, loading, signIn, signOut, changePassword }
 }
