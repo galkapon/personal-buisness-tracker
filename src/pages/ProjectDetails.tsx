@@ -150,8 +150,8 @@ export function ProjectDetails({ project, userId, onBack }: ProjectDetailsProps)
                         {formatDuration(entry)}
                       </span>
                     </div>
-                    {entry.notes && (
-                      <p className="text-sm text-gray-700">{entry.notes}</p>
+                    {entry.title && (
+                      <p className="text-sm text-gray-700">{entry.title}</p>
                     )}
                   </div>
                 ))}

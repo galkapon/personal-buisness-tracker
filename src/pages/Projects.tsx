@@ -15,7 +15,7 @@ export interface Project {
 
 export function Projects() {
   const { user, signOut } = useAuth()
-  const { runningEntry, startTimer, stopTimer, updateNotes } = useTimer(user?.id)
+  const { runningEntry, startTimer, stopTimer, updateTitle } = useTimer(user?.id)
   const [projects, setProjects] = useState<Project[]>([])
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null)
   const [newProjectName, setNewProjectName] = useState('')
@@ -170,7 +170,7 @@ export function Projects() {
                       runningEntry={runningEntry}
                       onStart={() => startTimer(selectedProject.id)}
                       onStop={() => stopTimer()}
-                      onUpdateNotes={updateNotes}
+                      onUpdateNotes={updateTitle}
                     />
                   </>
                 ) : (

@@ -21,13 +21,10 @@ export function useAuth() {
     return () => subscription?.unsubscribe()
   }, [])
 
-  const signUp = (email: string, password: string) =>
-    supabase.auth.signUp({ email, password })
-
   const signIn = (email: string, password: string) =>
     supabase.auth.signInWithPassword({ email, password })
 
   const signOut = () => supabase.auth.signOut()
 
-  return { user, loading, signUp, signIn, signOut }
+  return { user, loading, signIn, signOut }
 }

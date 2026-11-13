@@ -27,7 +27,7 @@ export function Timer({
       return
     }
 
-    setNotes(runningEntry.notes)
+    setNotes(runningEntry.title)
 
     const interval = setInterval(() => {
       const started = new Date(runningEntry.started_at).getTime()

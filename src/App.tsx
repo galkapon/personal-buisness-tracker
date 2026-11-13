@@ -1,6 +1,10 @@
 import { useAuth } from '@/hooks/useAuth'
 import { Auth } from '@/pages/Auth'
 import { Dashboard } from '@/pages/Dashboard'
+import { MeetingSummaries } from '@/pages/MeetingSummaries'
+import { Todos } from '@/pages/Todos'
+import { ResearchDashboard } from '@/pages/ResearchDashboard'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 function App() {
   const { user, loading } = useAuth()
@@ -15,7 +19,21 @@ function App() {
     )
   }
 
-  return user ? <Dashboard /> : <Auth />
+  if (!user) {
+    return <Auth />
+  }
+
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/meetings" element={<MeetingSummaries />} />
+        <Route path="/todos" element={<Todos />} />
+        <Route path="/research" element={<ResearchDashboard />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </HashRouter>
+  )
 }
 
 export default App

@@ -4,9 +4,11 @@ import { supabase } from '@/lib/supabaseClient'
 export interface TimeEntry {
   id: string
   project_id: string
+  subproject_id?: string | null
   started_at: string
   ended_at: string | null
-  notes: string
+  title: string
+  details?: string
   created_at: string
 }
 
@@ -72,15 +74,29 @@ export function useTimer(userId: string | undefined) {
   }, [runningEntry])
 
   const startTimer = useCallback(
-    async (projectId: string) => {
+    async (projectId: string, subprojectId?: string) => {
       if (!userId) return
+      const now = new Date().toISOString()
+
+      if (runningEntry) {
+        const { error: stopError } = await supabase
+          .from('time_entries')
+          .update({ ended_at: now })
+          .eq('id', runningEntry.id)
+        if (stopError) {
+          console.error('Error stopping previous timer:', stopError)
+          return
+        }
+      }
+
       const { data, error } = await supabase
         .from('time_entries')
         .insert({
           user_id: userId,
           project_id: projectId,
-          started_at: new Date().toISOString(),
-          notes: '',
+          ...(subprojectId ? { subproject_id: subprojectId } : {}),
+          started_at: now,
+          title: '',
         })
         .select()
         .single()
@@ -93,7 +109,7 @@ export function useTimer(userId: string | undefined) {
       setRunningEntry(data)
       setElapsedSeconds(0)
     },
-    [userId]
+    [userId, runningEntry]
   )
 
   const stopTimer = useCallback(async () => {
@@ -112,29 +128,37 @@ export function useTimer(userId: string | undefined) {
     setElapsedSeconds(0)
   }, [runningEntry])
 
-  const updateNotes = useCallback(
-    async (notes: string) => {
+  const updateTitle = useCallback(
+    async (title: string) => {
       if (!runningEntry) return
+      const id = runningEntry.id
       const { error } = await supabase
         .from('time_entries')
-        .update({ notes })
-        .eq('id', runningEntry.id)
+        .update({ title })
+        .eq('id', id)
 
       if (error) {
-        console.error('Error updating notes:', error)
+        console.error('Error updating title:', error)
         return
       }
 
-      setRunningEntry({ ...runningEntry, notes })
+      // Functional update so a Stop that lands first isn't undone.
+      setRunningEntry((prev) => (prev && prev.id === id ? { ...prev, title } : prev))
     },
     [runningEntry]
   )
+
+  /** Apply changes already saved elsewhere (e.g. the session details popup) to the running entry. */
+  const syncRunningEntry = useCallback((id: string, changes: Partial<TimeEntry>) => {
+    setRunningEntry((prev) => (prev && prev.id === id ? { ...prev, ...changes } : prev))
+  }, [])
 
   return {
     runningEntry,
     elapsedSeconds,
     startTimer,
     stopTimer,
-    updateNotes,
+    updateTitle,
+    syncRunningEntry,
   }
 }
